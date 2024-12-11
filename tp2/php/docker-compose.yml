@@ -1,0 +1,30 @@
+services:
+  app_php:
+    image: custom_php_image
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "8081:80"
+
+  app_mysql:
+    image: mysql
+    command: --init-file /data/seed.sql
+    volumes:
+      - ./sql/seed.sql:/data/seed.sql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: toto
+      MYSQL_PASSWORD: toto
+
+  app_phpmyadmin:
+    image: bitnami/phpmyadmin
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: app_mysql
+      DATABASE_DEFAULT_PORT_NUMBER: 3306
+      DATABASE_USER: toto
+      DATABASE_PASSWORD: toto
+
