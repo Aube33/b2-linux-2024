@@ -256,3 +256,50 @@ Cet exemple d'application est vraiment naze 👎
 ```
 
 # III. Docker compose
+### 🌞 Créez un fichier docker-compose.yml
+```
+aube@MakOS:~/temp/compose_test$ cat docker-compose.yml 
+version: "3"
+
+services:
+  conteneur_nul:
+    image: debian
+    entrypoint: sleep 9999
+  conteneur_flopesque:
+    image: debian
+    entrypoint: sleep 9999
+
+```
+
+### 🌞 Lancez les deux conteneurs avec docker compose
+```
+aube@MakOS:~/temp/compose_test$ docker compose up -d
+WARN[0000] /home/aube/temp/compose_test/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 2/2
+ ✔ conteneur_flopesque Pulled                                                                                                                                                                                 1.0s 
+ ✔ conteneur_nul Pulled                                                                                                                                                                                       1.0s 
+[+] Running 3/3
+ ✔ Network compose_test_default                  Created                                                                                                                                                      0.1s 
+ ✔ Container compose_test-conteneur_nul-1        Started                                                                                                                                                      0.4s 
+ ✔ Container compose_test-conteneur_flopesque-1  Started                                                                                                                                                      0.5s 
+```
+### 🌞 Vérifier que les deux conteneurs tournent
+```
+aube@MakOS:~/temp/compose_test$ docker compose ps
+WARN[0000] /home/aube/temp/compose_test/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+NAME                                 IMAGE     COMMAND        SERVICE               CREATED          STATUS          PORTS
+compose_test-conteneur_flopesque-1   debian    "sleep 9999"   conteneur_flopesque   37 seconds ago   Up 37 seconds   
+compose_test-conteneur_nul-1         debian    "sleep 9999"   conteneur_nul         37 seconds ago   Up 37 seconds   
+```
+
+### 🌞 Pop un shell dans le conteneur conteneur_nul
+```
+aube@MakOS:~/temp/compose_test$ docker exec -it compose_test-conteneur_nul-1 ping conteneur_flopesque
+PING conteneur_flopesque (172.20.0.2) 56(84) bytes of data.
+64 bytes from compose_test-conteneur_flopesque-1.compose_test_default (172.20.0.2): icmp_seq=1 ttl=64 time=0.075 ms
+64 bytes from compose_test-conteneur_flopesque-1.compose_test_default (172.20.0.2): icmp_seq=2 ttl=64 time=0.128 ms
+^C
+--- conteneur_flopesque ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1048ms
+rtt min/avg/max/mdev = 0.075/0.101/0.128/0.026 ms
+```
