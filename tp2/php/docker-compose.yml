@@ -7,6 +7,12 @@ services:
       - ./src:/var/www/html
     ports:
       - "8081:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.001'
+          memory: 1G
+
 
   app_mysql:
     image: mysql
